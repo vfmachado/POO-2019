@@ -5,10 +5,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
 //a classe painel é um jpanel (extends jpanel)
 //a classe painel torna disponível os métodos da classe MouseListener (implements)
-public class Painel extends JPanel implements MouseListener {
+public class Painel extends JPanel implements MouseListener, KeyListener {
 
 	private int largura;
 	
@@ -16,16 +18,23 @@ public class Painel extends JPanel implements MouseListener {
 	
 	private ArrayList<FormaGeometrica> formas;
 
+	private Color corAtual;
+	
+	private String formaSelecionada;
+	
 	public Painel() {
 		
 		this.addMouseListener(this);
+		//this.addKeyListener(this);
+		
+		formaSelecionada = "QUAD";
 		
 		formas = new ArrayList<FormaGeometrica>();
 		
 		for (int i = 0; i < 10; i++)
-			formas.add(new Quadrado(i * 50, 50));
+			formas.add(new Quadrado(i * 50, 50, Color.YELLOW));
 		
-		formas.add(new Circulo(300, 200));
+		formas.add(new Circulo(300, 200, Color.GREEN));
 		
 		
 	}
@@ -33,6 +42,9 @@ public class Painel extends JPanel implements MouseListener {
 
 	//sobrescrever o método do JPanel chamado paintComponent
 	public void paintComponent(Graphics g) {
+		
+		g.setColor(Color.black);
+		g.drawString("A forma selecionada e': " + formaSelecionada, 50, 50);
 		
 		largura = this.getWidth();
 		altura = this.getHeight();
@@ -74,7 +86,13 @@ public class Painel extends JPanel implements MouseListener {
 		int tamx = posx - this.x;
 		int tamy = posy - this.y;
 		
-		formas.add(new Quadrado(x, y, tamx, tamy));
+		if (formaSelecionada.equals("QUAD")) {
+			formas.add(new Quadrado(x, y, tamx, tamy, corAtual));
+		} else if (formaSelecionada.equals("CIRC")) {
+			System.out.println("OK... foi um circ");
+			formas.add(new Circulo(x, y, tamx, tamy, corAtual));
+		}
+		
 		repaint();
 		
 	}
@@ -93,5 +111,38 @@ public class Painel extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 	}
+	
+	
+	@Override //estou sobrescrevendo um método
+	public void keyPressed(KeyEvent e) {
+		
+		System.out.println(e.getKeyCode());
+		if (e.getKeyCode() == KeyEvent.VK_R) {
+			corAtual = Color.RED;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_G) {
+			corAtual = Color.GREEN;
+		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_1) {
+			formaSelecionada = "QUAD";
+		} else if (e.getKeyCode() == KeyEvent.VK_2) {
+			formaSelecionada = "CIRC";
+			
+		}
+		
+		repaint();
+	}
 
+	
+	@Override //estou sobrescrevendo um método
+	public void keyReleased(KeyEvent e) {
+		//nao utilizarei
+	}
+	
+	@Override //estou sobrescrevendo um método
+	public void keyTyped(KeyEvent e) {
+		
+	}
 }

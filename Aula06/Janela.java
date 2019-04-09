@@ -21,6 +21,7 @@ public class Janela {
 		//jframe.addMouseListener(painel);
 		jframe.add(painel);
 		
+		jframe.addKeyListener(painel);
 		
 		//janela visivel
 		jframe.setVisible(true);
